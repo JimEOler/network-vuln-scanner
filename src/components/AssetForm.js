@@ -44,30 +44,30 @@ export default function AssetForm({ asset, onSave, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="bg-danger/10 border border-danger/20 text-danger rounded-lg px-4 py-3 text-sm">
+        <div className="bg-danger/10 text-danger rounded-[8px] px-4 py-3 sx-caption">
           {error}
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-text-secondary mb-1.5">Asset Name</label>
+        <label className="block sx-caption-bold text-text-secondary mb-1.5">Asset Name</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-lg border px-3 py-2.5 text-sm"
+          className="w-full rounded-[8px] border border-border px-4 py-2.5 sx-caption bg-surface-5"
           placeholder="e.g. Production Web Server"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-text-secondary mb-1.5">Target Type</label>
+        <label className="block sx-caption-bold text-text-secondary mb-1.5">Target Type</label>
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="w-full rounded-lg border px-3 py-2.5 text-sm"
+          className="w-full rounded-[8px] border border-border px-4 py-2.5 sx-caption bg-surface-5"
         >
           <option value="ip">Single IP</option>
           <option value="cidr">CIDR Range</option>
@@ -77,12 +77,12 @@ export default function AssetForm({ asset, onSave, onCancel }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-text-secondary mb-1.5">Target</label>
+        <label className="block sx-caption-bold text-text-secondary mb-1.5">Target</label>
         <input
           type="text"
           value={target}
           onChange={(e) => setTarget(e.target.value)}
-          className="w-full rounded-lg border px-3 py-2.5 text-sm"
+          className="w-full rounded-[8px] border border-border px-4 py-2.5 sx-caption bg-surface-5 font-mono"
           placeholder={
             type === 'ip' ? '192.168.1.10' :
             type === 'cidr' ? '192.168.1.0/24' :
@@ -90,6 +90,9 @@ export default function AssetForm({ asset, onSave, onCancel }) {
             'fileserver.corp.local'
           }
         />
+        {type === 'domain' && (
+          <p className="sx-micro text-text-tertiary mt-1.5">Performs dig/nslookup to resolve A, CNAME, and MX records. All resolved hosts are added as assets automatically.</p>
+        )}
       </div>
 
       <div className="flex justify-end gap-3 pt-2">
@@ -97,16 +100,16 @@ export default function AssetForm({ asset, onSave, onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-sm rounded-lg border border-border text-text-secondary hover:bg-surface-hover transition-colors"
+            className="px-4 py-2 sx-caption rounded-[8px] border border-border text-text-secondary hover:bg-surface-hover transition-colors"
           >
             Cancel
           </button>
         )}
         <button
           type="submit"
-          className="px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
+          className="px-4 py-2 sx-caption rounded-[8px] bg-accent hover:bg-accent-hover text-white transition-colors"
         >
-          {asset ? 'Update Asset' : 'Add Asset'}
+          {asset ? 'Update Asset' : type === 'domain' ? 'Resolve & Add' : 'Add Asset'}
         </button>
       </div>
     </form>

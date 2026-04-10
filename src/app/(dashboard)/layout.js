@@ -10,10 +10,10 @@ export default async function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-surface">
       <Header username={session.username} />
       <TabNav />
-      <main className="flex-1 p-6">{children}</main>
+      <main className="flex-1 w-full max-w-[980px] mx-auto px-6 py-8">{children}</main>
     </div>
   );
 }

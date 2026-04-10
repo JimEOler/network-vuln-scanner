@@ -1,42 +1,106 @@
 @import "tailwindcss";
 
+/* ── Stratix Design System ─────────────────────────────────── */
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display'), local('.SFNSDisplay'), local('SFProDisplay-Regular');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Text';
+  src: local('SF Pro Text'), local('.SFNSText'), local('SFProText-Regular');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 @theme {
-  --color-surface: #0f172a;
-  --color-surface-alt: #1e293b;
-  --color-surface-hover: #334155;
-  --color-border: #334155;
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-accent: #3b82f6;
-  --color-accent-hover: #2563eb;
-  --color-danger: #ef4444;
-  --color-danger-hover: #dc2626;
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-critical: #ef4444;
-  --color-high: #f97316;
-  --color-medium: #f59e0b;
-  --color-low: #3b82f6;
-  --color-info: #06b6d4;
+  /* ── Backgrounds ── */
+  --color-surface: #000000;
+  --color-surface-alt: #252527;
+  --color-surface-2: #252529;
+  --color-surface-3: #27272A;
+  --color-surface-4: #29292C;
+  --color-surface-5: #232325;
+  --color-surface-hover: #29292C;
+  --color-surface-light: #F2F4F7;
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  /* ── Accent — Stratix Blue (the ONLY chromatic color) ── */
+  --color-accent: #0057B8;
+  --color-accent-hover: #0063D1;
+
+  /* ── Text ── */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: rgba(255, 255, 255, 0.60);
+  --color-text-tertiary: rgba(255, 255, 255, 0.32);
+
+  /* ── Links ── */
+  --color-link: #3B9EFF;
+
+  /* ── Semantic ── */
+  --color-danger: #FF453A;
+  --color-danger-hover: #FF6961;
+  --color-success: #30D158;
+  --color-warning: #FFD60A;
+  --color-critical: #FF453A;
+  --color-high: #FF9F0A;
+  --color-medium: #FFD60A;
+  --color-low: #3B9EFF;
+  --color-info: #64D2FF;
+
+  /* ── Button states ── */
+  --color-btn-active: #EAEDF2;
+  --color-btn-default: #F8F9FC;
+
+  /* ── Shadow ── */
+  --shadow-card: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;
+
+  /* ── Radius ── */
+  --radius-micro: 5px;
+  --radius-standard: 8px;
+  --radius-comfortable: 11px;
+  --radius-large: 12px;
+  --radius-pill: 980px;
+
+  /* ── Typography ── */
+  --font-display: 'SF Pro Display', -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-text: 'SF Pro Text', -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 html {
   color-scheme: dark;
 }
 
+/* ── Light theme overrides ── */
 html.light {
   color-scheme: light;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f8fafc;
-  --color-surface-hover: #e2e8f0;
-  --color-border: #e2e8f0;
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #64748b;
+  --color-surface: #F2F4F7;
+  --color-surface-alt: #FFFFFF;
+  --color-surface-2: #FFFFFF;
+  --color-surface-3: #FFFFFF;
+  --color-surface-4: #EAEDF2;
+  --color-surface-5: #F2F4F7;
+  --color-surface-hover: #EAEDF2;
+  --color-surface-light: #FFFFFF;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-text-primary: #1A1A1C;
+  --color-text-secondary: rgba(0, 0, 0, 0.48);
+  --color-text-tertiary: rgba(0, 0, 0, 0.24);
+  --color-link: #004EA3;
 }
 
 body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -44,13 +108,132 @@ body {
   color: white;
 }
 
+/* ── Form elements ── */
 input, textarea, select {
   background-color: var(--color-surface-alt);
-  border-color: var(--color-border);
+  border: 1px solid var(--color-border);
   color: var(--color-text-primary);
+  font-family: var(--font-text);
+  font-size: 14px;
+  letter-spacing: -0.224px;
+  border-radius: var(--radius-standard);
 }
 
 input:focus, textarea:focus, select:focus {
   outline: 2px solid var(--color-accent);
   outline-offset: -1px;
+}
+
+/* ── Stratix typography utilities ── */
+.sx-display-hero {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.28px;
+}
+
+.sx-section-heading {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.10;
+  letter-spacing: normal;
+}
+
+.sx-tile-heading {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: 0.196px;
+}
+
+.sx-card-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.19;
+  letter-spacing: 0.231px;
+}
+
+.sx-sub-heading {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.19;
+  letter-spacing: 0.231px;
+}
+
+.sx-body {
+  font-family: var(--font-text);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+}
+
+.sx-body-emphasis {
+  font-family: var(--font-text);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: -0.374px;
+}
+
+.sx-caption {
+  font-family: var(--font-text);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.29;
+  letter-spacing: -0.224px;
+}
+
+.sx-caption-bold {
+  font-family: var(--font-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.29;
+  letter-spacing: -0.224px;
+}
+
+.sx-micro {
+  font-family: var(--font-text);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: -0.12px;
+}
+
+.sx-micro-bold {
+  font-family: var(--font-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.33;
+  letter-spacing: -0.12px;
+}
+
+/* ── Stratix glass navigation ── */
+.sx-glass-nav {
+  background: rgba(0, 0, 0, 0.80);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* ── Stratix pill CTA ── */
+.sx-pill {
+  border-radius: 980px;
+}
+
+/* ── Card shadow (used sparingly) ── */
+.sx-shadow {
+  box-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;
+}
+
+/* ── Animations ── */
+@keyframes sx-spin {
+  to { transform: rotate(360deg); }
+}
+.sx-spin {
+  animation: sx-spin 1s linear infinite;
 }

@@ -18,13 +18,13 @@ export default function Modal({ open, onClose, title, children }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-surface-alt border border-border rounded-xl shadow-2xl">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="relative w-full max-w-lg bg-surface-alt rounded-[12px] sx-shadow overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
+          <h2 className="sx-card-title text-text-primary">{title}</h2>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-surface-hover text-text-secondary transition-colors"
+            className="p-1 rounded-[8px] hover:bg-surface-hover text-text-secondary transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

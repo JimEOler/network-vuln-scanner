@@ -101,15 +101,15 @@ export default function SchedulingPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div>
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-xl font-semibold text-text-primary">Scheduling</h2>
-          <p className="text-sm text-text-secondary mt-1">Configure recurring or one-time scan schedules</p>
+          <h2 className="sx-sub-heading text-text-primary">Scheduling</h2>
+          <p className="sx-caption text-text-secondary mt-1">Configure recurring or one-time scan schedules</p>
         </div>
         <button
           onClick={() => { setEditSchedule(null); setShowForm(true); }}
-          className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2 sx-caption bg-accent hover:bg-accent-hover text-white rounded-[8px] transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -119,48 +119,39 @@ export default function SchedulingPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-text-secondary">Loading schedules...</div>
+        <div className="text-center py-16 sx-caption text-text-secondary">Loading schedules...</div>
       ) : schedules.length === 0 ? (
-        <div className="text-center py-16 bg-surface-alt rounded-xl border border-border">
-          <svg className="w-12 h-12 mx-auto text-text-secondary mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="text-center py-20 bg-surface-alt rounded-[12px]">
+          <svg className="w-12 h-12 mx-auto text-text-tertiary mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="text-text-secondary mb-2">No schedules configured</p>
-          <p className="text-sm text-text-secondary">Create a schedule to automate vulnerability scanning</p>
+          <p className="sx-body text-text-secondary mb-1">No schedules configured</p>
+          <p className="sx-caption text-text-tertiary">Create a schedule to automate vulnerability scanning</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {schedules.map((schedule) => (
-            <div
-              key={schedule.id}
-              className="bg-surface-alt rounded-xl border border-border px-5 py-4"
-            >
+            <div key={schedule.id} className="bg-surface-alt rounded-[8px] px-5 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => toggleEnabled(schedule)}
                     className={`w-10 h-5 rounded-full relative transition-colors ${
-                      schedule.enabled ? 'bg-accent' : 'bg-border'
+                      schedule.enabled ? 'bg-accent' : 'bg-surface-hover'
                     }`}
                   >
-                    <span
-                      className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                        schedule.enabled ? 'left-5' : 'left-0.5'
-                      }`}
-                    />
+                    <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${schedule.enabled ? 'left-5' : 'left-0.5'}`} />
                   </button>
                   <div>
-                    <h3 className="text-sm font-medium text-text-primary">{schedule.name}</h3>
+                    <h3 className="sx-caption-bold text-text-primary">{schedule.name}</h3>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-text-secondary font-mono">
+                      <span className="sx-micro text-text-secondary font-mono">
                         {schedule.oneTime ? 'One-time' : schedule.cronExpression}
                       </span>
-                      <span className="text-xs text-text-secondary">
-                        {getAssetNames(schedule.assetIds)}
-                      </span>
+                      <span className="sx-micro text-text-tertiary">{getAssetNames(schedule.assetIds)}</span>
                     </div>
                     {schedule.nextRun && (
-                      <p className="text-xs text-text-secondary mt-1">
+                      <p className="sx-micro text-text-tertiary mt-1">
                         Next run: {new Date(schedule.nextRun).toLocaleString()}
                       </p>
                     )}
@@ -170,14 +161,13 @@ export default function SchedulingPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => runNow(schedule)}
-                    className="px-3 py-1.5 text-xs rounded-lg bg-success/10 text-success hover:bg-success/20 transition-colors"
-                    title="Run now"
+                    className="sx-pill px-3 py-1.5 sx-micro border border-accent text-accent hover:bg-accent/10 transition-colors"
                   >
                     Run Now
                   </button>
                   <button
                     onClick={() => { setEditSchedule(schedule); setShowForm(true); }}
-                    className="p-2 rounded-lg hover:bg-surface-hover text-text-secondary transition-colors"
+                    className="p-2 rounded-[8px] hover:bg-surface-hover text-text-secondary transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -185,7 +175,7 @@ export default function SchedulingPage() {
                   </button>
                   <button
                     onClick={() => setDeleteId(schedule.id)}
-                    className="p-2 rounded-lg hover:bg-danger/10 text-text-secondary hover:text-danger transition-colors"
+                    className="p-2 rounded-[8px] hover:bg-danger/10 text-text-secondary hover:text-danger transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -198,40 +188,15 @@ export default function SchedulingPage() {
         </div>
       )}
 
-      <Modal
-        open={showForm}
-        onClose={() => { setShowForm(false); setEditSchedule(null); }}
-        title={editSchedule ? 'Edit Schedule' : 'New Schedule'}
-      >
-        <ScheduleForm
-          assets={assets}
-          schedule={editSchedule}
-          onSave={handleSave}
-          onCancel={() => { setShowForm(false); setEditSchedule(null); }}
-        />
+      <Modal open={showForm} onClose={() => { setShowForm(false); setEditSchedule(null); }} title={editSchedule ? 'Edit Schedule' : 'New Schedule'}>
+        <ScheduleForm assets={assets} schedule={editSchedule} onSave={handleSave} onCancel={() => { setShowForm(false); setEditSchedule(null); }} />
       </Modal>
 
-      <Modal
-        open={!!deleteId}
-        onClose={() => setDeleteId(null)}
-        title="Delete Schedule"
-      >
-        <p className="text-sm text-text-secondary mb-6">
-          Are you sure you want to delete this schedule? This action cannot be undone.
-        </p>
+      <Modal open={!!deleteId} onClose={() => setDeleteId(null)} title="Delete Schedule">
+        <p className="sx-caption text-text-secondary mb-6">Are you sure you want to delete this schedule? This action cannot be undone.</p>
         <div className="flex justify-end gap-3">
-          <button
-            onClick={() => setDeleteId(null)}
-            className="px-4 py-2 text-sm rounded-lg border border-border text-text-secondary hover:bg-surface-hover transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleDelete}
-            className="px-4 py-2 text-sm rounded-lg bg-danger hover:bg-danger-hover text-white transition-colors"
-          >
-            Delete
-          </button>
+          <button onClick={() => setDeleteId(null)} className="px-4 py-2 sx-caption rounded-[8px] border border-border text-text-secondary hover:bg-surface-hover transition-colors">Cancel</button>
+          <button onClick={handleDelete} className="px-4 py-2 sx-caption rounded-[8px] bg-danger hover:bg-danger-hover text-white transition-colors">Delete</button>
         </div>
       </Modal>
     </div>

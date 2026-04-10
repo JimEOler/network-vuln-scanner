@@ -47,48 +47,46 @@ export default function ScheduleForm({ assets, schedule, onSave, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="bg-danger/10 border border-danger/20 text-danger rounded-lg px-4 py-3 text-sm">
-          {error}
-        </div>
+        <div className="bg-danger/10 text-danger rounded-[8px] px-4 py-3 sx-caption">{error}</div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-text-secondary mb-1.5">Schedule Name</label>
+        <label className="block sx-caption-bold text-text-secondary mb-1.5">Schedule Name</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-lg border px-3 py-2.5 text-sm"
+          className="w-full rounded-[8px] border border-border px-4 py-2.5 sx-caption bg-surface-5"
           placeholder="e.g. Weekly Production Scan"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-text-secondary mb-2">Select Assets</label>
+        <label className="block sx-caption-bold text-text-secondary mb-2">Select Assets</label>
         {assets.length === 0 ? (
-          <p className="text-sm text-text-secondary">No assets available — create one first</p>
+          <p className="sx-caption text-text-tertiary">No assets available — create one first</p>
         ) : (
-          <div className="space-y-2 max-h-40 overflow-y-auto">
+          <div className="space-y-1.5 max-h-40 overflow-y-auto">
             {assets.map((asset) => (
               <label
                 key={asset.id}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg border cursor-pointer transition-colors ${
+                className={`flex items-center gap-3 px-3 py-2 rounded-[8px] cursor-pointer transition-colors ${
                   selectedAssets.includes(asset.id)
-                    ? 'border-accent bg-accent/5'
-                    : 'border-border hover:bg-surface-hover'
+                    ? 'bg-accent/5 border border-accent/20'
+                    : 'bg-surface-5 border border-border hover:bg-surface-hover'
                 }`}
               >
                 <input
                   type="checkbox"
                   checked={selectedAssets.includes(asset.id)}
                   onChange={() => toggleAsset(asset.id)}
-                  className="rounded"
+                  className="rounded accent-accent"
                 />
                 <div>
-                  <span className="text-sm text-text-primary">{asset.name}</span>
-                  <span className="text-xs text-text-secondary ml-2 font-mono">{asset.target}</span>
+                  <span className="sx-caption text-text-primary">{asset.name}</span>
+                  <span className="sx-micro text-text-tertiary ml-2 font-mono">{asset.target}</span>
                 </div>
               </label>
             ))}
@@ -97,12 +95,12 @@ export default function ScheduleForm({ assets, schedule, onSave, onCancel }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-text-secondary mb-2">Schedule Type</label>
+        <label className="block sx-caption-bold text-text-secondary mb-2">Schedule Type</label>
         <div className="flex gap-3">
           <button
             type="button"
             onClick={() => setScheduleType('recurring')}
-            className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${
+            className={`flex-1 px-3 py-2 sx-caption rounded-[8px] border transition-colors ${
               scheduleType === 'recurring'
                 ? 'border-accent bg-accent/5 text-accent'
                 : 'border-border text-text-secondary hover:bg-surface-hover'
@@ -113,7 +111,7 @@ export default function ScheduleForm({ assets, schedule, onSave, onCancel }) {
           <button
             type="button"
             onClick={() => setScheduleType('oneTime')}
-            className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${
+            className={`flex-1 px-3 py-2 sx-caption rounded-[8px] border transition-colors ${
               scheduleType === 'oneTime'
                 ? 'border-accent bg-accent/5 text-accent'
                 : 'border-border text-text-secondary hover:bg-surface-hover'
@@ -126,12 +124,12 @@ export default function ScheduleForm({ assets, schedule, onSave, onCancel }) {
 
       {scheduleType === 'recurring' && (
         <div>
-          <label className="block text-sm font-medium text-text-secondary mb-1.5">Cron Expression</label>
+          <label className="block sx-caption-bold text-text-secondary mb-1.5">Cron Expression</label>
           <input
             type="text"
             value={cronExpression}
             onChange={(e) => setCronExpression(e.target.value)}
-            className="w-full rounded-lg border px-3 py-2.5 text-sm font-mono"
+            className="w-full rounded-[8px] border border-border px-4 py-2.5 sx-caption bg-surface-5 font-mono"
             placeholder="0 0 * * *"
           />
           <div className="flex flex-wrap gap-2 mt-2">
@@ -140,7 +138,7 @@ export default function ScheduleForm({ assets, schedule, onSave, onCancel }) {
                 key={preset.value}
                 type="button"
                 onClick={() => setCronExpression(preset.value)}
-                className={`text-xs px-2 py-1 rounded border transition-colors ${
+                className={`sx-pill sx-micro px-3 py-1 border transition-colors ${
                   cronExpression === preset.value
                     ? 'border-accent text-accent bg-accent/5'
                     : 'border-border text-text-secondary hover:bg-surface-hover'
@@ -155,18 +153,11 @@ export default function ScheduleForm({ assets, schedule, onSave, onCancel }) {
 
       <div className="flex justify-end gap-3 pt-2">
         {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 text-sm rounded-lg border border-border text-text-secondary hover:bg-surface-hover transition-colors"
-          >
+          <button type="button" onClick={onCancel} className="px-4 py-2 sx-caption rounded-[8px] border border-border text-text-secondary hover:bg-surface-hover transition-colors">
             Cancel
           </button>
         )}
-        <button
-          type="submit"
-          className="px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
-        >
+        <button type="submit" className="px-4 py-2 sx-caption rounded-[8px] bg-accent hover:bg-accent-hover text-white transition-colors">
           {schedule ? 'Update Schedule' : 'Create Schedule'}
         </button>
       </div>

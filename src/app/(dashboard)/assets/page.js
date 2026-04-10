@@ -42,7 +42,6 @@ export default function AssetsPage() {
           setAssets((prev) => prev.map((a) => (a.id === editAsset.id ? updated : a)));
         }
       } else if (data.type === 'domain') {
-        // Domain type: resolve via dig/nslookup and auto-create IP assets
         setShowForm(false);
         setResolving(true);
         const res = await fetch('/api/assets/resolve-domain', {
@@ -89,23 +88,23 @@ export default function AssetsPage() {
     setDeleteId(null);
   }
 
-  const typeColors = {
-    ip: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    cidr: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    hostname: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    domain: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  const typeBadge = {
+    ip: 'bg-accent/10 text-link',
+    cidr: 'bg-accent/10 text-link',
+    hostname: 'bg-accent/10 text-link',
+    domain: 'bg-accent/10 text-link',
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div>
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-xl font-semibold text-text-primary">Assets</h2>
-          <p className="text-sm text-text-secondary mt-1">Define scan targets — IPs, CIDR ranges, hostnames, or domains</p>
+          <h2 className="sx-sub-heading text-text-primary">Assets</h2>
+          <p className="sx-caption text-text-secondary mt-1">Define scan targets — IPs, CIDR ranges, hostnames, or domains</p>
         </div>
         <button
           onClick={() => { setEditAsset(null); setShowForm(true); }}
-          className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2 sx-caption bg-accent hover:bg-accent-hover text-white rounded-[8px] transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -115,52 +114,46 @@ export default function AssetsPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-text-secondary">Loading assets...</div>
+        <div className="text-center py-16 sx-caption text-text-secondary">Loading assets...</div>
       ) : assets.length === 0 ? (
-        <div className="text-center py-16 bg-surface-alt rounded-xl border border-border">
-          <svg className="w-12 h-12 mx-auto text-text-secondary mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="text-center py-20 bg-surface-alt rounded-[12px]">
+          <svg className="w-12 h-12 mx-auto text-text-tertiary mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
           </svg>
-          <p className="text-text-secondary mb-2">No assets defined yet</p>
-          <p className="text-sm text-text-secondary">Add your first scan target to get started</p>
+          <p className="sx-body text-text-secondary mb-1">No assets defined yet</p>
+          <p className="sx-caption text-text-tertiary">Add your first scan target to get started</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {assets.map((asset) => (
             <div
               key={asset.id}
-              className="flex items-center justify-between bg-surface-alt rounded-xl border border-border px-5 py-4"
+              className="flex items-center justify-between bg-surface-alt rounded-[8px] px-5 py-4 group"
             >
-              <div className="flex items-center gap-4">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-sm font-medium text-text-primary">{asset.name}</h3>
-                    <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColors[asset.type]}`}>
-                      {asset.type.toUpperCase()}
-                    </span>
-                  </div>
-                  <p className="text-sm text-text-secondary mt-1 font-mono">{asset.target}</p>
-                  {asset.resolvedRecords && (
-                    <p className="text-xs text-text-secondary mt-0.5">
-                      {asset.resolvedRecords.a?.length || 0} A, {asset.resolvedRecords.cname?.length || 0} CNAME, {asset.resolvedRecords.mx?.length || 0} MX — via {asset.resolvedWith}
-                    </p>
-                  )}
+              <div>
+                <div className="flex items-center gap-3">
+                  <h3 className="sx-caption-bold text-text-primary">{asset.name}</h3>
+                  <span className={`sx-micro px-2 py-0.5 rounded-[980px] ${typeBadge[asset.type] || typeBadge.ip}`}>
+                    {asset.type.toUpperCase()}
+                  </span>
                   {asset.recordType && (
-                    <span className="text-xs text-text-secondary mt-0.5">
-                      {asset.recordType} record
-                    </span>
-                  )}
-                  {asset.parentDomainId && (
-                    <p className="text-xs text-text-secondary mt-0.5">
-                      from domain lookup
-                    </p>
+                    <span className="sx-micro text-text-tertiary">{asset.recordType}</span>
                   )}
                 </div>
+                <p className="sx-micro text-text-secondary mt-1 font-mono">{asset.target}</p>
+                {asset.resolvedRecords && (
+                  <p className="sx-micro text-text-tertiary mt-0.5">
+                    {asset.resolvedRecords.a?.length || 0} A, {asset.resolvedRecords.cname?.length || 0} CNAME, {asset.resolvedRecords.mx?.length || 0} MX — via {asset.resolvedWith}
+                  </p>
+                )}
+                {asset.parentDomainId && (
+                  <p className="sx-micro text-text-tertiary mt-0.5">from domain lookup</p>
+                )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => { setEditAsset(asset); setShowForm(true); }}
-                  className="p-2 rounded-lg hover:bg-surface-hover text-text-secondary transition-colors"
+                  className="p-2 rounded-[8px] hover:bg-surface-hover text-text-secondary transition-colors"
                   title="Edit"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,7 +162,7 @@ export default function AssetsPage() {
                 </button>
                 <button
                   onClick={() => setDeleteId(asset.id)}
-                  className="p-2 rounded-lg hover:bg-danger/10 text-text-secondary hover:text-danger transition-colors"
+                  className="p-2 rounded-[8px] hover:bg-danger/10 text-text-secondary hover:text-danger transition-colors"
                   title="Delete"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,71 +175,48 @@ export default function AssetsPage() {
         </div>
       )}
 
-      {/* Add/Edit Modal */}
-      <Modal
-        open={showForm}
-        onClose={() => { setShowForm(false); setEditAsset(null); }}
-        title={editAsset ? 'Edit Asset' : 'Add Asset'}
-      >
-        <AssetForm
-          asset={editAsset}
-          onSave={handleSave}
-          onCancel={() => { setShowForm(false); setEditAsset(null); }}
-        />
+      <Modal open={showForm} onClose={() => { setShowForm(false); setEditAsset(null); }} title={editAsset ? 'Edit Asset' : 'Add Asset'}>
+        <AssetForm asset={editAsset} onSave={handleSave} onCancel={() => { setShowForm(false); setEditAsset(null); }} />
       </Modal>
 
       {/* Resolving Indicator */}
       {resolving && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-surface-alt border border-border rounded-xl px-8 py-6 text-center">
-            <svg className="w-8 h-8 mx-auto text-accent animate-spin mb-3" fill="none" viewBox="0 0 24 24">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-surface-alt rounded-[12px] px-8 py-6 text-center sx-shadow">
+            <svg className="w-8 h-8 mx-auto text-accent sx-spin mb-3" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            <p className="text-sm text-text-primary font-medium">Resolving domain...</p>
-            <p className="text-xs text-text-secondary mt-1">Running dig / nslookup lookup</p>
+            <p className="sx-caption-bold text-text-primary">Resolving domain...</p>
+            <p className="sx-micro text-text-secondary mt-1">Running dig / nslookup lookup</p>
           </div>
         </div>
       )}
 
       {/* Domain Resolution Results */}
-      <Modal
-        open={!!resolveResult}
-        onClose={() => setResolveResult(null)}
-        title={resolveResult?.error ? 'Resolution Failed' : 'Domain Resolved'}
-      >
+      <Modal open={!!resolveResult} onClose={() => setResolveResult(null)} title={resolveResult?.error ? 'Resolution Failed' : 'Domain Resolved'}>
         {resolveResult?.error ? (
           <div className="space-y-4">
-            <div className="bg-danger/10 border border-danger/20 text-danger rounded-lg px-4 py-3 text-sm">
-              {resolveResult.error}
-            </div>
+            <div className="bg-danger/10 text-danger rounded-[8px] px-4 py-3 sx-caption">{resolveResult.error}</div>
             <div className="flex justify-end">
-              <button
-                onClick={() => setResolveResult(null)}
-                className="px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
-              >
-                OK
-              </button>
+              <button onClick={() => setResolveResult(null)} className="px-4 py-2 sx-caption rounded-[8px] bg-accent hover:bg-accent-hover text-white transition-colors">OK</button>
             </div>
           </div>
         ) : resolveResult ? (
           <div className="space-y-4">
-            <div className="bg-success/10 border border-success/20 text-success rounded-lg px-4 py-3 text-sm">
-              Resolved <span className="font-mono font-medium">{resolveResult.domain?.target}</span> using{' '}
-              <span className="font-medium">{resolveResult.resolvedWith}</span>
+            <div className="bg-success/10 text-success rounded-[8px] px-4 py-3 sx-caption">
+              Resolved <span className="font-mono font-semibold">{resolveResult.domain?.target}</span> using <span className="font-semibold">{resolveResult.resolvedWith}</span>
             </div>
 
             {resolveResult.records?.a?.length > 0 && (
               <div>
-                <p className="text-sm font-medium text-text-secondary mb-2">
-                  A Records ({resolveResult.records.a.length})
-                </p>
-                <div className="space-y-1.5">
+                <p className="sx-caption-bold text-text-secondary mb-2">A Records ({resolveResult.records.a.length})</p>
+                <div className="space-y-1">
                   {resolveResult.records.a.map((ip) => (
-                    <div key={ip} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
-                      <span className="w-2 h-2 rounded-full bg-blue-400" />
-                      <span className="text-sm font-mono text-text-primary">{ip}</span>
-                      <span className="text-xs text-text-secondary ml-auto">IP</span>
+                    <div key={ip} className="flex items-center gap-2 px-3 py-2 rounded-[8px] bg-surface-5 border border-border">
+                      <span className="w-2 h-2 rounded-full bg-accent" />
+                      <span className="sx-micro font-mono text-text-primary">{ip}</span>
+                      <span className="sx-micro text-text-tertiary ml-auto">IP</span>
                     </div>
                   ))}
                 </div>
@@ -255,15 +225,13 @@ export default function AssetsPage() {
 
             {resolveResult.records?.cname?.length > 0 && (
               <div>
-                <p className="text-sm font-medium text-text-secondary mb-2">
-                  CNAME Records ({resolveResult.records.cname.length})
-                </p>
-                <div className="space-y-1.5">
+                <p className="sx-caption-bold text-text-secondary mb-2">CNAME Records ({resolveResult.records.cname.length})</p>
+                <div className="space-y-1">
                   {resolveResult.records.cname.map((host) => (
-                    <div key={host} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                      <span className="text-sm font-mono text-text-primary">{host}</span>
-                      <span className="text-xs text-text-secondary ml-auto">Hostname</span>
+                    <div key={host} className="flex items-center gap-2 px-3 py-2 rounded-[8px] bg-surface-5 border border-border">
+                      <span className="w-2 h-2 rounded-full bg-accent" />
+                      <span className="sx-micro font-mono text-text-primary">{host}</span>
+                      <span className="sx-micro text-text-tertiary ml-auto">Hostname</span>
                     </div>
                   ))}
                 </div>
@@ -272,58 +240,32 @@ export default function AssetsPage() {
 
             {resolveResult.records?.mx?.length > 0 && (
               <div>
-                <p className="text-sm font-medium text-text-secondary mb-2">
-                  MX Records ({resolveResult.records.mx.length})
-                </p>
-                <div className="space-y-1.5">
+                <p className="sx-caption-bold text-text-secondary mb-2">MX Records ({resolveResult.records.mx.length})</p>
+                <div className="space-y-1">
                   {resolveResult.records.mx.map((host) => (
-                    <div key={host} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      <span className="text-sm font-mono text-text-primary">{host}</span>
-                      <span className="text-xs text-text-secondary ml-auto">Hostname</span>
+                    <div key={host} className="flex items-center gap-2 px-3 py-2 rounded-[8px] bg-surface-5 border border-border">
+                      <span className="w-2 h-2 rounded-full bg-accent" />
+                      <span className="sx-micro font-mono text-text-primary">{host}</span>
+                      <span className="sx-micro text-text-tertiary ml-auto">Hostname</span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            <p className="text-xs text-text-secondary">
-              {resolveResult.createdAssets?.length} total assets created
-            </p>
+            <p className="sx-micro text-text-tertiary">{resolveResult.createdAssets?.length} total assets created</p>
             <div className="flex justify-end">
-              <button
-                onClick={() => setResolveResult(null)}
-                className="px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
-              >
-                Done
-              </button>
+              <button onClick={() => setResolveResult(null)} className="px-4 py-2 sx-caption rounded-[8px] bg-accent hover:bg-accent-hover text-white transition-colors">Done</button>
             </div>
           </div>
         ) : null}
       </Modal>
 
-      {/* Delete Confirmation */}
-      <Modal
-        open={!!deleteId}
-        onClose={() => setDeleteId(null)}
-        title="Delete Asset"
-      >
-        <p className="text-sm text-text-secondary mb-6">
-          Are you sure you want to delete this asset? This action cannot be undone.
-        </p>
+      <Modal open={!!deleteId} onClose={() => setDeleteId(null)} title="Delete Asset">
+        <p className="sx-caption text-text-secondary mb-6">Are you sure you want to delete this asset? This action cannot be undone.</p>
         <div className="flex justify-end gap-3">
-          <button
-            onClick={() => setDeleteId(null)}
-            className="px-4 py-2 text-sm rounded-lg border border-border text-text-secondary hover:bg-surface-hover transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleDelete}
-            className="px-4 py-2 text-sm rounded-lg bg-danger hover:bg-danger-hover text-white transition-colors"
-          >
-            Delete
-          </button>
+          <button onClick={() => setDeleteId(null)} className="px-4 py-2 sx-caption rounded-[8px] border border-border text-text-secondary hover:bg-surface-hover transition-colors">Cancel</button>
+          <button onClick={handleDelete} className="px-4 py-2 sx-caption rounded-[8px] bg-danger hover:bg-danger-hover text-white transition-colors">Delete</button>
         </div>
       </Modal>
     </div>

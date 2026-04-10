@@ -13,17 +13,17 @@ export default function TabNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex border-b border-border bg-surface">
+    <nav className="flex border-b border-border bg-surface-alt">
       {tabs.map((tab) => {
         const active = pathname.startsWith(tab.href);
         return (
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-2 px-5 py-3 sx-micro transition-colors border-b-2 ${
               active
-                ? 'border-accent text-accent'
-                : 'border-transparent text-text-secondary hover:text-text-primary hover:border-border'
+                ? 'border-accent text-accent font-semibold'
+                : 'border-transparent text-text-secondary hover:text-text-primary'
             }`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
