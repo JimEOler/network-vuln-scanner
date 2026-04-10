@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.env.local
+data/users.json
+data/assets.json
+data/schedules.json
+data/scans/
+data/audit.log

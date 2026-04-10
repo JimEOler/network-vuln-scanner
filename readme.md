@@ -139,3 +139,4 @@ data/
 ## License
 
 Internal use only — Stratix Corporation. Not for redistribution.
+"# network-vuln-scanner" 
