@@ -10,6 +10,8 @@ export default function AssetsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editAsset, setEditAsset] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [resolving, setResolving] = useState(false);
+  const [resolveResult, setResolveResult] = useState(null);
 
   useEffect(() => {
     fetchAssets();
@@ -39,6 +41,24 @@ export default function AssetsPage() {
           const updated = await res.json();
           setAssets((prev) => prev.map((a) => (a.id === editAsset.id ? updated : a)));
         }
+      } else if (data.type === 'domain') {
+        // Domain type: resolve via dig/nslookup and auto-create IP assets
+        setShowForm(false);
+        setResolving(true);
+        const res = await fetch('/api/assets/resolve-domain', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: data.name, target: data.target }),
+        });
+        const result = await res.json();
+        setResolving(false);
+        if (res.ok) {
+          setAssets((prev) => [...prev, ...result.createdAssets]);
+          setResolveResult(result);
+        } else {
+          setResolveResult({ error: result.error });
+        }
+        return;
       } else {
         const res = await fetch('/api/assets', {
           method: 'POST',
@@ -52,6 +72,7 @@ export default function AssetsPage() {
       }
     } catch (err) {
       console.error('Failed to save asset:', err);
+      setResolving(false);
     }
     setShowForm(false);
     setEditAsset(null);
@@ -72,6 +93,7 @@ export default function AssetsPage() {
     ip: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
     cidr: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
     hostname: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    domain: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
   };
 
   return (
@@ -79,7 +101,7 @@ export default function AssetsPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-semibold text-text-primary">Assets</h2>
-          <p className="text-sm text-text-secondary mt-1">Define scan targets — IPs, CIDR ranges, or hostnames</p>
+          <p className="text-sm text-text-secondary mt-1">Define scan targets — IPs, CIDR ranges, hostnames, or domains</p>
         </div>
         <button
           onClick={() => { setEditAsset(null); setShowForm(true); }}
@@ -118,6 +140,16 @@ export default function AssetsPage() {
                     </span>
                   </div>
                   <p className="text-sm text-text-secondary mt-1 font-mono">{asset.target}</p>
+                  {asset.resolvedAddresses && (
+                    <p className="text-xs text-text-secondary mt-0.5">
+                      Resolved: {asset.resolvedAddresses.join(', ')} via {asset.resolvedWith}
+                    </p>
+                  )}
+                  {asset.parentDomainId && (
+                    <p className="text-xs text-text-secondary mt-0.5">
+                      from domain lookup
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -156,6 +188,71 @@ export default function AssetsPage() {
           onSave={handleSave}
           onCancel={() => { setShowForm(false); setEditAsset(null); }}
         />
+      </Modal>
+
+      {/* Resolving Indicator */}
+      {resolving && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-surface-alt border border-border rounded-xl px-8 py-6 text-center">
+            <svg className="w-8 h-8 mx-auto text-accent animate-spin mb-3" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            <p className="text-sm text-text-primary font-medium">Resolving domain...</p>
+            <p className="text-xs text-text-secondary mt-1">Running dig / nslookup lookup</p>
+          </div>
+        </div>
+      )}
+
+      {/* Domain Resolution Results */}
+      <Modal
+        open={!!resolveResult}
+        onClose={() => setResolveResult(null)}
+        title={resolveResult?.error ? 'Resolution Failed' : 'Domain Resolved'}
+      >
+        {resolveResult?.error ? (
+          <div className="space-y-4">
+            <div className="bg-danger/10 border border-danger/20 text-danger rounded-lg px-4 py-3 text-sm">
+              {resolveResult.error}
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setResolveResult(null)}
+                className="px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        ) : resolveResult ? (
+          <div className="space-y-4">
+            <div className="bg-success/10 border border-success/20 text-success rounded-lg px-4 py-3 text-sm">
+              Resolved <span className="font-mono font-medium">{resolveResult.domain?.target}</span> using{' '}
+              <span className="font-medium">{resolveResult.resolvedWith}</span>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-text-secondary mb-2">
+                {resolveResult.addresses?.length} IP{resolveResult.addresses?.length !== 1 ? 's' : ''} found and added as assets:
+              </p>
+              <div className="space-y-1.5">
+                {resolveResult.addresses?.map((ip) => (
+                  <div key={ip} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
+                    <span className="w-2 h-2 rounded-full bg-success" />
+                    <span className="text-sm font-mono text-text-primary">{ip}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setResolveResult(null)}
+                className="px-4 py-2 text-sm rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        ) : null}
       </Modal>
 
       {/* Delete Confirmation */}

@@ -6,6 +6,7 @@ const VALIDATORS = {
   ip: /^(\d{1,3}\.){3}\d{1,3}$/,
   cidr: /^(\d{1,3}\.){3}\d{1,3}\/\d{1,2}$/,
   hostname: /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/,
+  domain: /^([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/,
 };
 
 export default function AssetForm({ asset, onSave, onCancel }) {
@@ -33,6 +34,7 @@ export default function AssetForm({ asset, onSave, onCancel }) {
         ip: 'e.g. 192.168.1.10',
         cidr: 'e.g. 192.168.1.0/24',
         hostname: 'e.g. fileserver.corp.local',
+        domain: 'e.g. example.com',
       };
       setError(`Invalid ${type} format — ${hints[type]}`);
       return;
@@ -70,6 +72,7 @@ export default function AssetForm({ asset, onSave, onCancel }) {
           <option value="ip">Single IP</option>
           <option value="cidr">CIDR Range</option>
           <option value="hostname">Hostname</option>
+          <option value="domain">Domain (dig/nslookup)</option>
         </select>
       </div>
 
@@ -83,6 +86,7 @@ export default function AssetForm({ asset, onSave, onCancel }) {
           placeholder={
             type === 'ip' ? '192.168.1.10' :
             type === 'cidr' ? '192.168.1.0/24' :
+            type === 'domain' ? 'example.com' :
             'fileserver.corp.local'
           }
         />

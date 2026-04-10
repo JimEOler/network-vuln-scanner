@@ -29,9 +29,9 @@ export async function POST(request) {
     );
   }
 
-  if (!['ip', 'cidr', 'hostname'].includes(type)) {
+  if (!['ip', 'cidr', 'hostname', 'domain'].includes(type)) {
     return NextResponse.json(
-      { error: 'Type must be ip, cidr, or hostname' },
+      { error: 'Type must be ip, cidr, hostname, or domain' },
       { status: 400 }
     );
   }
