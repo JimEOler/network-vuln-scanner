@@ -31,9 +31,12 @@ export async function POST(request) {
     );
   }
 
-  if (resolution.addresses.length === 0) {
+  const { a, cname, mx } = resolution.records;
+  const totalRecords = a.length + cname.length + mx.length;
+
+  if (totalRecords === 0) {
     return NextResponse.json(
-      { error: `No IP addresses resolved for ${target}` },
+      { error: `No DNS records found for ${target}` },
       { status: 422 }
     );
   }
@@ -47,7 +50,7 @@ export async function POST(request) {
     name,
     target,
     type: 'domain',
-    resolvedAddresses: resolution.addresses,
+    resolvedRecords: resolution.records,
     resolvedWith: resolution.tool,
     resolvedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
@@ -56,17 +59,17 @@ export async function POST(request) {
   assets.push(domainAsset);
   createdAssets.push(domainAsset);
 
-  // Auto-create IP assets for each resolved address
-  for (const ip of resolution.addresses) {
-    // Skip if an asset with this IP already exists
-    const exists = assets.some((a) => a.target === ip && a.type === 'ip');
+  // Auto-create IP assets for A records
+  for (const ip of a) {
+    const exists = assets.some((asset) => asset.target === ip && asset.type === 'ip');
     if (exists) continue;
 
     const ipAsset = {
       id: uuidv4(),
-      name: `${name} (${ip})`,
+      name: `${name} - A (${ip})`,
       target: ip,
       type: 'ip',
+      recordType: 'A',
       parentDomainId: domainAsset.id,
       createdAt: new Date().toISOString(),
       createdBy: session.username,
@@ -75,12 +78,52 @@ export async function POST(request) {
     createdAssets.push(ipAsset);
   }
 
+  // Auto-create hostname assets for CNAME records
+  for (const host of cname) {
+    const exists = assets.some((asset) => asset.target === host && asset.type === 'hostname');
+    if (exists) continue;
+
+    const cnameAsset = {
+      id: uuidv4(),
+      name: `${name} - CNAME (${host})`,
+      target: host,
+      type: 'hostname',
+      recordType: 'CNAME',
+      parentDomainId: domainAsset.id,
+      createdAt: new Date().toISOString(),
+      createdBy: session.username,
+    };
+    assets.push(cnameAsset);
+    createdAssets.push(cnameAsset);
+  }
+
+  // Auto-create hostname assets for MX records
+  for (const host of mx) {
+    const exists = assets.some((asset) => asset.target === host && asset.type === 'hostname');
+    if (exists) continue;
+
+    const mxAsset = {
+      id: uuidv4(),
+      name: `${name} - MX (${host})`,
+      target: host,
+      type: 'hostname',
+      recordType: 'MX',
+      parentDomainId: domainAsset.id,
+      createdAt: new Date().toISOString(),
+      createdBy: session.username,
+    };
+    assets.push(mxAsset);
+    createdAssets.push(mxAsset);
+  }
+
   await saveAssets(assets);
   await logAudit('DOMAIN_RESOLVED', {
     domainAssetId: domainAsset.id,
     domain: target,
     tool: resolution.tool,
-    addressCount: resolution.addresses.length,
+    aRecords: a.length,
+    cnameRecords: cname.length,
+    mxRecords: mx.length,
     createdAssets: createdAssets.length,
     user: session.username,
   });
@@ -88,7 +131,7 @@ export async function POST(request) {
   return NextResponse.json({
     domain: domainAsset,
     resolvedWith: resolution.tool,
-    addresses: resolution.addresses,
+    records: resolution.records,
     createdAssets,
   }, { status: 201 });
 }

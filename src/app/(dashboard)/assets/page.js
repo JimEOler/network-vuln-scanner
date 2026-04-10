@@ -140,10 +140,15 @@ export default function AssetsPage() {
                     </span>
                   </div>
                   <p className="text-sm text-text-secondary mt-1 font-mono">{asset.target}</p>
-                  {asset.resolvedAddresses && (
+                  {asset.resolvedRecords && (
                     <p className="text-xs text-text-secondary mt-0.5">
-                      Resolved: {asset.resolvedAddresses.join(', ')} via {asset.resolvedWith}
+                      {asset.resolvedRecords.a?.length || 0} A, {asset.resolvedRecords.cname?.length || 0} CNAME, {asset.resolvedRecords.mx?.length || 0} MX — via {asset.resolvedWith}
                     </p>
+                  )}
+                  {asset.recordType && (
+                    <span className="text-xs text-text-secondary mt-0.5">
+                      {asset.recordType} record
+                    </span>
                   )}
                   {asset.parentDomainId && (
                     <p className="text-xs text-text-secondary mt-0.5">
@@ -230,19 +235,61 @@ export default function AssetsPage() {
               Resolved <span className="font-mono font-medium">{resolveResult.domain?.target}</span> using{' '}
               <span className="font-medium">{resolveResult.resolvedWith}</span>
             </div>
-            <div>
-              <p className="text-sm font-medium text-text-secondary mb-2">
-                {resolveResult.addresses?.length} IP{resolveResult.addresses?.length !== 1 ? 's' : ''} found and added as assets:
-              </p>
-              <div className="space-y-1.5">
-                {resolveResult.addresses?.map((ip) => (
-                  <div key={ip} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
-                    <span className="w-2 h-2 rounded-full bg-success" />
-                    <span className="text-sm font-mono text-text-primary">{ip}</span>
-                  </div>
-                ))}
+
+            {resolveResult.records?.a?.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-text-secondary mb-2">
+                  A Records ({resolveResult.records.a.length})
+                </p>
+                <div className="space-y-1.5">
+                  {resolveResult.records.a.map((ip) => (
+                    <div key={ip} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
+                      <span className="w-2 h-2 rounded-full bg-blue-400" />
+                      <span className="text-sm font-mono text-text-primary">{ip}</span>
+                      <span className="text-xs text-text-secondary ml-auto">IP</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+
+            {resolveResult.records?.cname?.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-text-secondary mb-2">
+                  CNAME Records ({resolveResult.records.cname.length})
+                </p>
+                <div className="space-y-1.5">
+                  {resolveResult.records.cname.map((host) => (
+                    <div key={host} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      <span className="text-sm font-mono text-text-primary">{host}</span>
+                      <span className="text-xs text-text-secondary ml-auto">Hostname</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {resolveResult.records?.mx?.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-text-secondary mb-2">
+                  MX Records ({resolveResult.records.mx.length})
+                </p>
+                <div className="space-y-1.5">
+                  {resolveResult.records.mx.map((host) => (
+                    <div key={host} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-border">
+                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                      <span className="text-sm font-mono text-text-primary">{host}</span>
+                      <span className="text-xs text-text-secondary ml-auto">Hostname</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <p className="text-xs text-text-secondary">
+              {resolveResult.createdAssets?.length} total assets created
+            </p>
             <div className="flex justify-end">
               <button
                 onClick={() => setResolveResult(null)}
