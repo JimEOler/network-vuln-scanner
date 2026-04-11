@@ -1,0 +1,330 @@
+[
+  {
+    "id": "1775930157191-1",
+    "timestamp": "2026-04-11T17:55:57.191Z",
+    "category": "NMAP",
+    "level": "INFO",
+    "message": "Scan pipeline started (scanId: 802e1a5f-a4fb-494b-821a-aea2b67b285a)",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "targetCount": 1,
+      "targets": [
+        {
+          "id": "38242493-39a8-48ed-b870-933709839467",
+          "name": "www",
+          "target": "www.stratixcorp.com",
+          "type": "hostname"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1775930157211-2",
+    "timestamp": "2026-04-11T17:55:57.211Z",
+    "category": "NMAP",
+    "level": "INFO",
+    "message": "Starting nmap scan: nmap -sV -oX - --open -T4 www.stratixcorp.com",
+    "detail": {
+      "target": "www.stratixcorp.com",
+      "command": "nmap -sV -oX - --open -T4 www.stratixcorp.com",
+      "nmapPath": "nmap",
+      "args": [
+        "-sV",
+        "-oX",
+        "-",
+        "--open",
+        "-T4",
+        "www.stratixcorp.com"
+      ],
+      "ports": "default (top 1000)",
+      "timing": "T4 (aggressive)"
+    }
+  },
+  {
+    "id": "1775930176858-3",
+    "timestamp": "2026-04-11T17:56:16.858Z",
+    "category": "NMAP",
+    "level": "DEBUG",
+    "message": "nmap raw XML output for www.stratixcorp.com (9590 bytes)",
+    "detail": {
+      "target": "www.stratixcorp.com",
+      "duration": 19625,
+      "xmlLength": 9590,
+      "xmlPreview": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<!DOCTYPE nmaprun>\r\n<?xml-stylesheet href=\"file:///C:/Program Files (x86)/Nmap/nmap.xsl\" type=\"text/xsl\"?>\r\n<!-- Nmap 7.99 scan initiated Sat Apr 11 13:55:57 2026 as: nmap -sV -oX - -&#45;open -T4 www.stratixcorp.com -->\r\n<nmaprun scanner=\"nmap\" args=\"nmap -sV -oX - -&#45;open -T4 www.stratixcorp.com\" start=\"1775930157\" startstr=\"Sat Apr 11 13:55:57 2026\" version=\"7.99\" xmloutputversion=\"1.05\">\r\n<scaninfo type=\"syn\" protocol=\"tcp\" numservices=\"1000\" servic"
+    }
+  },
+  {
+    "id": "1775930176862-4",
+    "timestamp": "2026-04-11T17:56:16.862Z",
+    "category": "NMAP",
+    "level": "INFO",
+    "message": "nmap scan completed for www.stratixcorp.com in 19625ms",
+    "detail": {
+      "target": "www.stratixcorp.com",
+      "duration": 19625,
+      "hostsFound": 1,
+      "totalPorts": 2,
+      "openPorts": 2,
+      "hosts": [
+        {
+          "ip": "130.211.200.63",
+          "hostname": "www.stratixcorp.com",
+          "state": "up",
+          "ports": [
+            {
+              "port": 80,
+              "protocol": "tcp",
+              "state": "open",
+              "service": "http",
+              "product": "nginx",
+              "version": ""
+            },
+            {
+              "port": 443,
+              "protocol": "tcp",
+              "state": "open",
+              "service": "http",
+              "product": "nginx",
+              "version": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "1775930176866-5",
+    "timestamp": "2026-04-11T17:56:16.866Z",
+    "category": "BANNER",
+    "level": "INFO",
+    "message": "Grabbing banners for 130.211.200.63 on 2 port(s)",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "host": "130.211.200.63",
+      "ports": [
+        80,
+        443
+      ]
+    }
+  },
+  {
+    "id": "1775930177097-6",
+    "timestamp": "2026-04-11T17:56:17.097Z",
+    "category": "BANNER",
+    "level": "INFO",
+    "message": "Banner grab completed for 130.211.200.63 in 227ms",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "host": "130.211.200.63",
+      "duration": 227,
+      "bannersFound": 2,
+      "portsWithBanners": [
+        80,
+        443
+      ],
+      "bannerPreviews": {
+        "80": "HTTP/1.1 404 Not Found\r\nServer: nginx\r\nDate: Sat, 11 Apr 2026 17:56:16 GMT\r\nContent-Type: text/html\r\nContent-Length: 5890\r\nConnection: close\r\nVary: Accept-Encoding\r\nETag: \"69d924f2-1702\"",
+        "443": "HTTP/1.1 404 Not Found\r\nServer: nginx\r\nDate: Sat, 11 Apr 2026 17:56:16 GMT\r\nContent-Type: text/html\r\nContent-Length: 5890\r\nConnection: close\r\nVary: Accept-Encoding\r\nVary: Accept-Encoding\r\nETag: \"69d92"
+      }
+    }
+  },
+  {
+    "id": "1775930177150-7",
+    "timestamp": "2026-04-11T17:56:17.150Z",
+    "category": "CVE",
+    "level": "INFO",
+    "message": "Looking up CVEs for nginx on port 80",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "host": "130.211.200.63",
+      "port": 80,
+      "product": "nginx",
+      "version": "",
+      "query": "nginx"
+    }
+  },
+  {
+    "id": "1775930177404-8",
+    "timestamp": "2026-04-11T17:56:17.404Z",
+    "category": "CVE",
+    "level": "INFO",
+    "message": "CVE lookup completed for nginx: 10 found in 226ms",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "host": "130.211.200.63",
+      "port": 80,
+      "product": "nginx",
+      "version": "",
+      "duration": 226,
+      "cveCount": 10,
+      "cves": [
+        {
+          "id": "CVE-2009-2629",
+          "severity": "UNKNOWN",
+          "score": 7.5,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2009-3896",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2009-3898",
+          "severity": "UNKNOWN",
+          "score": 4.9,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2009-4487",
+          "severity": "UNKNOWN",
+          "score": 6.8,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2010-2263",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "WORKAROUND"
+        },
+        {
+          "id": "CVE-2010-2266",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "WORKAROUND"
+        },
+        {
+          "id": "CVE-2011-4315",
+          "severity": "UNKNOWN",
+          "score": 6.8,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2012-1180",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2012-2089",
+          "severity": "UNKNOWN",
+          "score": 6.8,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2011-4963",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "OFFICIAL_FIX"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1775930177457-9",
+    "timestamp": "2026-04-11T17:56:17.457Z",
+    "category": "CVE",
+    "level": "INFO",
+    "message": "Looking up CVEs for nginx on port 443",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "host": "130.211.200.63",
+      "port": 443,
+      "product": "nginx",
+      "version": "",
+      "query": "nginx"
+    }
+  },
+  {
+    "id": "1775930177610-10",
+    "timestamp": "2026-04-11T17:56:17.610Z",
+    "category": "CVE",
+    "level": "INFO",
+    "message": "CVE lookup completed for nginx: 10 found in 147ms",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "host": "130.211.200.63",
+      "port": 443,
+      "product": "nginx",
+      "version": "",
+      "duration": 147,
+      "cveCount": 10,
+      "cves": [
+        {
+          "id": "CVE-2009-2629",
+          "severity": "UNKNOWN",
+          "score": 7.5,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2009-3896",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2009-3898",
+          "severity": "UNKNOWN",
+          "score": 4.9,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2009-4487",
+          "severity": "UNKNOWN",
+          "score": 6.8,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2010-2263",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "WORKAROUND"
+        },
+        {
+          "id": "CVE-2010-2266",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "WORKAROUND"
+        },
+        {
+          "id": "CVE-2011-4315",
+          "severity": "UNKNOWN",
+          "score": 6.8,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2012-1180",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2012-2089",
+          "severity": "UNKNOWN",
+          "score": 6.8,
+          "patchLevel": "OFFICIAL_FIX"
+        },
+        {
+          "id": "CVE-2011-4963",
+          "severity": "UNKNOWN",
+          "score": 5,
+          "patchLevel": "OFFICIAL_FIX"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1775930177775-11",
+    "timestamp": "2026-04-11T17:56:17.775Z",
+    "category": "NMAP",
+    "level": "INFO",
+    "message": "Scan pipeline completed (scanId: 802e1a5f-a4fb-494b-821a-aea2b67b285a)",
+    "detail": {
+      "scanId": "802e1a5f-a4fb-494b-821a-aea2b67b285a",
+      "totalHosts": 1,
+      "totalPorts": 2,
+      "totalCVEs": 20
+    }
+  }
+]
